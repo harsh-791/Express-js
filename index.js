@@ -22,6 +22,34 @@ app.post('/courses', (req, res) => {
     res.send(courses);
 });
 
+app.put('/courses/:id', (req, res) => {
+    try{
+        let singleCourse = courses.find((course) => {
+            return course.id === +req.params.id
+        })
+
+        if(!singleCourse){
+            res.status(404).send("course doesn't exist");
+        }
+
+        singleCourse.name = req.body.name;
+        res.send(courses);
+    }
+    catch{
+        res.status(500).send(err);
+    }
+});
+
+app.delete('/courses', (req, res) => {
+    const courseId = parseInt(req.body.id);
+
+    const courseIndex = courses.findIndex(c => c.id === courseId);
+
+    courses.splice(courseIndex, 1);
+
+    res.json({ data: courses });
+});
+
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on http:localhost:${PORT}`);
